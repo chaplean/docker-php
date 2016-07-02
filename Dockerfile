@@ -46,6 +46,10 @@ RUN curl -L -o /tmp/memcached.tar.gz "https://github.com/php-memcached-dev/php-m
 # Working directory
 WORKDIR /var/www/symfony/
 
+# Install Composer
+RUN curl -o composer.phar https://getcomposer.org/composer.phar -L
+RUN chmod +x composer.phar
+
 # Apache mods
 RUN a2enmod rewrite
 RUN a2enmod headers
