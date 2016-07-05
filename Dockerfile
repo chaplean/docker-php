@@ -2,14 +2,21 @@ FROM php:7.0-apache
 MAINTAINER Tom - Chaplean <tom@chaplean.com>
 
 # Install dependencies
+# Install xvfb-run cause of a bug in wk, see http://unix.stackexchange.com/questions/192642/wkhtmltopdf-qxcbconnection-could-not-connect-to-display
 RUN apt-get update && apt-get install -y \
     curl \
     unzip \
     libfreetype6-dev \
+    libicu-dev \
     libjpeg-dev \
     libldap2-dev \
     libmcrypt-dev \
+    libmemcached-dev \
     libpng12-dev \
+    libpq-dev \
+    libxml2-dev \
+    wkhtmltopdf \
+    xvfb \
     zlib1g-dev
 
 # Install opcache
@@ -30,18 +37,22 @@ RUN docker-php-ext-configure gd --enable-gd-native-ttf --with-jpeg-dir=/usr/lib/
 	&& docker-php-ext-install gd
 
 # Install intl
-RUN apt-get install -y libicu-dev
 RUN pecl install intl
 RUN docker-php-ext-install intl
 
 # Install Memcached
-RUN apt-get install -y libmemcached-dev libpq-dev
 RUN curl -L -o /tmp/memcached.tar.gz "https://github.com/php-memcached-dev/php-memcached/archive/php7.tar.gz" \
     && mkdir -p /usr/src/php/ext/memcached \
     && tar -C /usr/src/php/ext/memcached -zxvf /tmp/memcached.tar.gz --strip 1 \
     && docker-php-ext-configure memcached \
     && docker-php-ext-install memcached \
     && rm /tmp/memcached.tar.gz
+
+# Install XML module
+RUN docker-php-ext-install xml
+
+# Install Zip module
+RUN docker-php-ext-install zip
 
 # Working directory
 WORKDIR /var/www/symfony/
