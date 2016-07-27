@@ -5,16 +5,17 @@ MAINTAINER Tom - Chaplean <tom@chaplean.com>
 # Install xvfb-run cause of a bug in wk, see http://unix.stackexchange.com/questions/192642/wkhtmltopdf-qxcbconnection-could-not-connect-to-display
 RUN apt-get update && apt-get install -y \
     curl \
-    unzip \
     libfreetype6-dev \
     libicu-dev \
-    libjpeg-dev \
+    libjpeg62-turbo-dev \
     libldap2-dev \
     libmcrypt-dev \
     libmemcached-dev \
     libpng12-dev \
     libpq-dev \
     libxml2-dev \
+    ruby-full \
+    unzip \
     wkhtmltopdf \
     xvfb \
     zlib1g-dev
@@ -33,23 +34,14 @@ RUN docker-php-ext-install mcrypt
 RUN docker-php-ext-install pdo_mysql
 
 # Install GD
-RUN docker-php-ext-configure gd --enable-gd-native-ttf --with-jpeg-dir=/usr/lib/x86_64-linux-gnu --with-png-dir=/usr/lib/x86_64-linux-gnu --with-freetype-dir=/usr/lib/x86_64-linux-gnu \
+RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
 	&& docker-php-ext-install gd
 
 # Install intl
-RUN pecl install intl
 RUN docker-php-ext-install intl
 
-# Install Memcached
-RUN curl -L -o /tmp/memcached.tar.gz "https://github.com/php-memcached-dev/php-memcached/archive/php7.tar.gz" \
-    && mkdir -p /usr/src/php/ext/memcached \
-    && tar -C /usr/src/php/ext/memcached -zxvf /tmp/memcached.tar.gz --strip 1 \
-    && docker-php-ext-configure memcached \
-    && docker-php-ext-install memcached \
-    && rm /tmp/memcached.tar.gz
-
-# Install XML module
-RUN docker-php-ext-install xml
+# Install XML module (already loaded with libxml2)
+# RUN docker-php-ext-install xml
 
 # Install Zip module
 RUN docker-php-ext-install zip
@@ -69,5 +61,8 @@ RUN usermod -u 1000 www-data
 
 # PHP Configuration
 ADD ./php.ini /usr/local/etc/php/php.ini
+
+# Symfony projects requirements
+RUN gem install bundler compass
 
 CMD /usr/sbin/apache2ctl -D FOREGROUND
