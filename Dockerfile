@@ -20,18 +20,9 @@ RUN apt-get update && apt-get install -y \
     xvfb \
     zlib1g-dev
 
-# Install opcache
-RUN docker-php-ext-install opcache
-
 # Install APCu
 RUN pecl install apcu
 RUN echo "extension=apcu.so" > /usr/local/etc/php/conf.d/apcu.ini
-
-# Install mcrypt extension
-RUN docker-php-ext-install mcrypt
-
-# Install PDO
-RUN docker-php-ext-install pdo_mysql
 
 # Install GD
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
@@ -40,8 +31,21 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
 # Install intl
 RUN docker-php-ext-install intl
 
-# Install XML module (already loaded with libxml2)
-# RUN docker-php-ext-install xml
+# Install LDAP
+RUN docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu
+RUN docker-php-ext-install ldap
+
+# Install mcrypt extension
+RUN docker-php-ext-install mcrypt
+
+# Install opcache
+RUN docker-php-ext-install opcache
+
+# Install PDO
+RUN docker-php-ext-install pdo_mysql
+
+# Install XML module
+RUN docker-php-ext-install xml
 
 # Install Zip module
 RUN docker-php-ext-install zip
