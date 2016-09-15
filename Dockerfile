@@ -16,7 +16,6 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     ruby-full \
     unzip \
-    wkhtmltopdf \
     xvfb \
     zlib1g-dev
 
@@ -50,6 +49,11 @@ RUN docker-php-ext-install xml
 # Install Zip module
 RUN docker-php-ext-install zip
 
+# Install Wkhtmltox
+RUN curl -O http://download.gna.org/wkhtmltopdf/0.12/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz \
+    && tar -C /usr/ --strip-components 1 --xz -xf wkhtmltox-0.12.3_linux-generic-amd64.tar.xz \
+    && rm wkhtmltox-0.12.3_linux-generic-amd64.tar.xz 
+
 # Working directory
 WORKDIR /var/www/symfony/
 
@@ -67,6 +71,6 @@ RUN usermod -u 1000 www-data
 ADD ./php.ini /usr/local/etc/php/php.ini
 
 # Symfony projects requirements
-RUN gem install bundler compass
+RUN gem install sass -v 3.4.22 && gem install bundler compass
 
 CMD /usr/sbin/apache2ctl -D FOREGROUND
