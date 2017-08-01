@@ -1,7 +1,7 @@
 Docker PHP image
 =====================
 
-From `php:7.0-apache` image
+From `php:7.1-apache` image
 
 ## Build image
 

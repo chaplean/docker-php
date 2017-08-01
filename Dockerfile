@@ -1,8 +1,8 @@
-FROM php:7.0-apache
-MAINTAINER Tom - Chaplean <tom@chaplean.com>
+# Debian jessie based
+FROM php:7.1-apache
+MAINTAINER Tom - Chaplean <tom@chaplean.coop>
 
 # Install dependencies
-# Install xvfb-run cause of a bug in wk, see http://unix.stackexchange.com/questions/192642/wkhtmltopdf-qxcbconnection-could-not-connect-to-display
 RUN apt-get update && apt-get install -y \
     curl \
     libfreetype6-dev \
@@ -16,7 +16,6 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     ruby-full \
     unzip \
-    xvfb \
     zlib1g-dev
 
 # Install APCu
@@ -50,9 +49,11 @@ RUN docker-php-ext-install xml
 RUN docker-php-ext-install zip
 
 # Install Wkhtmltox
-RUN curl -O http://download.gna.org/wkhtmltopdf/0.12/0.12.3/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz \
-    && tar -C /usr/ --strip-components 1 --xz -xf wkhtmltox-0.12.3_linux-generic-amd64.tar.xz \
-    && rm wkhtmltox-0.12.3_linux-generic-amd64.tar.xz 
+# Do not use wkhtmltopdf 0.12.1-2 (or only with xvfb). See http://unix.stackexchange.com/questions/192642/wkhtmltopdf-qxcbconnection-could-not-connect-to-display
+RUN curl -sL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz -o wkhtmltox.tar.xz
+RUN tar -C /usr/ -xf wkhtmltox.tar.xz
+RUN rm wkhtmltox.tar.xz
+ENV PATH="/usr/wkhtmltox/bin:${PATH}"
 
 # Working directory
 WORKDIR /var/www/symfony/
