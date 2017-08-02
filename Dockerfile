@@ -4,16 +4,31 @@ MAINTAINER Tom - Chaplean <tom@chaplean.coop>
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
+    bison \
+    build-essential \
     curl \
+    flex \
+    g++ \
+    git \
+    gperf \
+    libfontconfig1-dev \
+    libfreetype6 \
     libfreetype6-dev \
     libicu-dev \
     libjpeg62-turbo-dev \
     libldap2-dev \
     libmcrypt-dev \
     libmemcached-dev \
+    libpng-dev \
     libpng12-dev \
     libpq-dev \
+    libsqlite3-dev \
+    libssl-dev \
+    libx11-dev \
+    libxext-dev \
     libxml2-dev \
+    perl \
+    python \
     ruby-full \
     unzip \
     zlib1g-dev
@@ -55,8 +70,30 @@ RUN tar -C /usr/ -xf wkhtmltox.tar.xz
 RUN rm wkhtmltox.tar.xz
 ENV PATH="/usr/wkhtmltox/bin:${PATH}"
 
+# Install MySQL
+RUN apt-get install -y \
+    mysql-client
+
+ADD ./mysql.cnf /etc/mysql/my.cnf
+
+WORKDIR /tmp/
+
+# Install NPM
+RUN curl -sL https://deb.nodesource.com/setup_4.x | bash -
+RUN apt-get install -y nodejs
+
+# Install PhantomJS
+RUN npm install -g phantomjs-prebuilt
+
+# Install Karma
+RUN npm install -g jasmine-core karma karma-coverage karma-html2js-preprocessor karma-jasmine karma-phantomjs-launcher
+
 # Working directory
 WORKDIR /var/www/symfony/
+
+# Install XDebug
+RUN pecl install xdebug-2.5.5 \
+    && docker-php-ext-enable xdebug
 
 # Install Composer and make it available in the PATH
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer

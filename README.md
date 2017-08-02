@@ -14,6 +14,6 @@ docker build -t chaplean/php .
 You need to make `docker login` first
 
 ```
-docker tag chaplean/php chaplean/php:latest
+docker tag chaplean/php chaplean/php:VERSION
 docker push chaplean/php
 ```
