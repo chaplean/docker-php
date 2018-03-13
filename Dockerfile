@@ -79,14 +79,14 @@ ADD ./mysql.cnf /etc/mysql/my.cnf
 WORKDIR /tmp/
 
 # Install NPM
-RUN curl -sL https://deb.nodesource.com/setup_4.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 RUN apt-get install -y nodejs
 
 # Install PhantomJS
-RUN npm install -g phantomjs-prebuilt
+RUN npm install -g phantomjs-prebuilt --unsafe-perm
 
 # Install Karma
-RUN npm install -g jasmine-core karma karma-coverage karma-html2js-preprocessor karma-jasmine karma-phantomjs-launcher
+RUN npm install -g jasmine-core karma karma-coverage karma-html2js-preprocessor karma-jasmine karma-phantomjs-launcher --unsafe-perm
 
 # Working directory
 WORKDIR /var/www/symfony/
