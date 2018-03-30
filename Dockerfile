@@ -82,18 +82,15 @@ WORKDIR /tmp/
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 RUN apt-get install -y nodejs
 
-# Install PhantomJS
-RUN npm install -g phantomjs-prebuilt --unsafe-perm
-
-# Install Karma
-RUN npm install -g jasmine-core karma karma-coverage karma-html2js-preprocessor karma-jasmine karma-phantomjs-launcher --unsafe-perm
+# Install Elm
+RUN npm install -g elm elm-test elm-format elm-doc-test --unsafe-perm
 
 # Working directory
 WORKDIR /var/www/symfony/
 
-# Install XDebug
-RUN pecl install xdebug-2.5.5 \
-    && docker-php-ext-enable xdebug
+## Install XDebug
+#RUN pecl install xdebug-2.5.5 \
+#    && docker-php-ext-enable xdebug
 
 # Install Composer and make it available in the PATH
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
