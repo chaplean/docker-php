@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y \
     g++ \
     git \
     gperf \
+    gnupg \
     libfontconfig1-dev \
     libfreetype6 \
     libfreetype6-dev \
@@ -20,7 +21,6 @@ RUN apt-get update && apt-get install -y \
     libmcrypt-dev \
     libmemcached-dev \
     libpng-dev \
-    libpng12-dev \
     libpq-dev \
     libsqlite3-dev \
     libssl-dev \
@@ -39,7 +39,7 @@ RUN echo "extension=apcu.so" > /usr/local/etc/php/conf.d/apcu.ini
 
 # Install GD
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-	&& docker-php-ext-install gd
+    && docker-php-ext-install gd
 
 # Install intl
 RUN docker-php-ext-install intl
@@ -79,7 +79,7 @@ ADD ./mysql.cnf /etc/mysql/my.cnf
 WORKDIR /tmp/
 
 # Install NPM
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN apt-get install -y nodejs
 
 # Install Elm
@@ -89,8 +89,7 @@ RUN npm install -g elm elm-test elm-format elm-doc-test --unsafe-perm
 WORKDIR /var/www/symfony/
 
 ## Install XDebug
-#RUN pecl install xdebug-2.5.5 \
-#    && docker-php-ext-enable xdebug
+RUN pecl install xdebug
 
 # Install Composer and make it available in the PATH
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
@@ -104,8 +103,5 @@ RUN usermod -u 1000 www-data
 
 # PHP Configuration
 ADD ./php.ini /usr/local/etc/php/php.ini
-
-# Symfony projects requirements
-RUN gem install sass -v 3.4.22 && gem install bundler compass
 
 CMD /usr/sbin/apache2ctl -D FOREGROUND
