@@ -104,4 +104,7 @@ RUN usermod -u 1000 www-data
 # PHP Configuration
 ADD ./php.ini /usr/local/etc/php/php.ini
 
+# Symfony deploy requirements
+RUN gem install bundler
+
 CMD /usr/sbin/apache2ctl -D FOREGROUND
