@@ -27,6 +27,7 @@ RUN apt-get update && apt-get install -y \
     libx11-dev \
     libxext-dev \
     libxml2-dev \
+	netbase \
     perl \
     python \
     ruby-full \
