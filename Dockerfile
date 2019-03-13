@@ -91,7 +91,7 @@ RUN npm install -g elm elm-test elm-format elm-doc-test --unsafe-perm
 WORKDIR /var/www/symfony/
 
 ## Install XDebug
-RUN pecl install xdebug
+RUN pecl install xdebug-2.6.1
 
 # Install Composer and make it available in the PATH
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
