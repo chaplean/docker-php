@@ -87,6 +87,16 @@ RUN apt-get install -y nodejs
 # Install Elm
 RUN npm install -g elm elm-test elm-format elm-doc-test --unsafe-perm
 
+# Install Cypress dependencies
+RUN apt-get install -y \
+    xvfb \
+    libgtk2.0-0 \
+    libnotify-dev \
+    libgconf-2-4 \
+    libnss3 \
+    libxss1 \
+    libasound2
+
 # Working directory
 WORKDIR /var/www/symfony/
 
