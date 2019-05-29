@@ -1,12 +1,12 @@
 Docker PHP image
 =====================
 
-From `php:7.1-apache` image
+From `php:7.X-apache` image
 
 ## Build image
 
 ```
-docker build -t chaplean/php .
+docker build -t chaplean/php ./7.2
 ```
 
 ## Push image (Public Cloud)
